@@ -3,6 +3,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import f1_score
 from joblib import dump
 from sklearn import svm, tree
+import cv2
 import pdb
 
 
@@ -26,9 +27,16 @@ def get_all_h_param_comb(params):
     return h_param_comb
 
 
-def preprocess_digits(dataset):
+def preprocess_digits(dataset,n=7):
+
     n_samples = len(dataset.images)
-    data = dataset.images.reshape((n_samples, -1))
+    
+    data = [0]*n_samples
+    for img_id in range(len(dataset.images)):
+        res = cv2.resize(dataset.images[img_id], dsize=(n,n), interpolation=cv2.INTER_CUBIC)
+        data[img_id] = res.reshape(-1)
+
+    # data = dataset.images.reshape((n_samples, -1))
     label = dataset.target
     return data, label
 
@@ -65,14 +73,14 @@ def pred_image_viz(x_test, predictions):
 # test to evaluate the performance of the model
 
 
-def train_dev_test_split(data, label, train_frac, dev_frac):
+def train_dev_test_split(data, label, train_frac, dev_frac,random_state=42):
 
     dev_test_frac = 1 - train_frac
     x_train, x_dev_test, y_train, y_dev_test = train_test_split(
         data, label, test_size=dev_test_frac, shuffle=True
     )
     x_test, x_dev, y_test, y_dev = train_test_split(
-        x_dev_test, y_dev_test, test_size=(dev_frac) / dev_test_frac, shuffle=True
+        x_dev_test, y_dev_test, test_size=(dev_frac) / dev_test_frac, shuffle=True, random_state=random_state
     )
 
     return x_train, y_train, x_dev, y_dev, x_test, y_test
