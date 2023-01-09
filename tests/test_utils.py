@@ -2,7 +2,7 @@ import sys, os
 import numpy as np
 from joblib import load
 
-from mlops.utils import get_all_h_param_comb, tune_and_save
+from mlops.utils import get_all_h_param_comb, tune_and_save, train_dev_test_split
 from sklearn import svm, metrics
 
 # test case to check if all the combinations of the hyper parameters are indeed getting created
@@ -87,6 +87,15 @@ def test_predicts_all():
     predicted = best_model.predict(x_test)
 
     assert set(predicted) == set(y_test)
+
+
+def test_train_test_split():
+    X, y = helper_create_bin_data(n=1000, d=7) 
+    split_1 = train_dev_test_split(X, y, 0.7, 0.15)
+    split_2 = train_dev_test_split(X, y, 0.7, 0.15)
+    for a,b in zip(split_1,split_2):
+        assert (np.sum(a!=b)==0)
+
 
 # what more test cases should be there
 # irrespective of the changes to the refactored code.

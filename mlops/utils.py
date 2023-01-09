@@ -77,7 +77,7 @@ def train_dev_test_split(data, label, train_frac, dev_frac,random_state=42):
 
     dev_test_frac = 1 - train_frac
     x_train, x_dev_test, y_train, y_dev_test = train_test_split(
-        data, label, test_size=dev_test_frac, shuffle=True
+        data, label, test_size=dev_test_frac, shuffle=True, random_state=random_state
     )
     x_test, x_dev, y_test, y_dev = train_test_split(
         x_dev_test, y_dev_test, test_size=(dev_frac) / dev_test_frac, shuffle=True, random_state=random_state
