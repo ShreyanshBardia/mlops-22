@@ -85,8 +85,11 @@ def train_dev_test_split(data, label, train_frac, dev_frac,random_state=42):
 
     return x_train, y_train, x_dev, y_dev, x_test, y_test
 
+def macro_f1(y_true, y_pred, pos_label=1):
+    return f1_score(y_true, y_pred, pos_label=pos_label, average='macro', zero_division='warn')
 
-def h_param_tuning(h_param_comb, clf, x_train, y_train, x_dev, y_dev, metric, verbose=False):
+
+def h_param_tuning(h_param_comb, clf, x_train, y_train, x_dev, y_dev, metric , verbose=False):
     best_metric = -1.0
     best_model = None
     best_h_params = None
@@ -150,5 +153,5 @@ def tune_and_save(
     return model_path
 
 
-def macro_f1(y_true, y_pred, pos_label=1):
-    return f1_score(y_true, y_pred, pos_label=pos_label, average='macro', zero_division='warn')
+
+

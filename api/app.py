@@ -31,3 +31,6 @@ def predict_digit():
     print("done loading")
     predicted = model.predict([image])
     return {"y_predicted":int(predicted[0])}
+
+if __name__ =="__main__":
+    app.run()

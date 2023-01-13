@@ -97,6 +97,25 @@ def test_train_test_split():
         assert (np.sum(a!=b)==0)
 
 
+
+def test_predicts_all_input_points():    
+    h_param_comb = helper_h_params()
+    x_train, y_train = helper_create_bin_data(n=100, d=7)
+    x_dev, y_dev = x_train, y_train
+    x_test, y_test = x_train, y_train
+
+    clf = svm.SVC()
+    metric = metrics.accuracy_score
+    
+    model_path = "test_run_model_path.joblib"
+    actual_model_path = tune_and_save(clf, x_train, y_train, x_dev, y_dev, metric, h_param_comb, model_path)
+    best_model = load(actual_model_path)
+
+    predicted = best_model.predict(x_test)
+    assert len(predicted) == len(x_test)
+    assert(len(best_model.predict(x_dev))) == len(x_dev)
+
+
 # what more test cases should be there
 # irrespective of the changes to the refactored code.
 

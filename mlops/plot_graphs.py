@@ -46,8 +46,8 @@ data, label = preprocess_digits(digits)
 del digits
 
 # define the evaluation metric
-metric_list = [metrics.accuracy_score, macro_f1]
-h_metric = metrics.accuracy_score
+metric_list = [ macro_f1]
+h_metric = macro_f1
 
 n_cv = 5
 results = {}
@@ -59,7 +59,7 @@ for n in range(n_cv):
     # Create a classifier: a support vector classifier
     models_of_choice = {
         "svm": svm.SVC(),
-        "decision_tree": tree.DecisionTreeClassifier(),
+        "decision_tree": tree.DecisionTreeClassifier(random_state=42),
     }
     for clf_name in models_of_choice:
         clf = models_of_choice[clf_name]
@@ -80,9 +80,21 @@ for n in range(n_cv):
         results[clf_name].append({m.__name__:m(y_pred=predicted, y_true=y_test) for m in metric_list})
         # 4. report the test set accurancy with that best model.
         # PART: Compute evaluation metrics
+        
         print(
             f"Classification report for classifier {clf}:\n"
             f"{metrics.classification_report(y_test, predicted)}\n"
         )
+
+model_name=None
+param=None
+metric=0
+for classifier in results:
+    for metrics, model_params in zip(results[classifier],h_param_comb[classifier]):
+        if metrics['macro_f1']>metric:
+            param = model_params
+            model_name=classifier
+            metric = metrics['macro_f1']
+print(f"BEST MODEL has {metric} macro_f1 score with params {param}")
 
 print(results)
